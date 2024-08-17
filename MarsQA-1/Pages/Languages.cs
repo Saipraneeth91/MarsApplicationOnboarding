@@ -14,7 +14,6 @@ namespace MarsApplicationOnboarding.Pages
 {
     public class Languages
     {
-
         private readonly IWebDriver driver;
         private readonly ElementUtil eleUtil;
         public Languages(IWebDriver driver)
@@ -57,7 +56,8 @@ namespace MarsApplicationOnboarding.Pages
             //click edit icon
             eleUtil.doClick(editicon);
             // clear language field
-            driver.FindElement(languagefield).Clear();
+            //driver.FindElement(languagefield).Clear();
+            eleUtil.doClear(languagefield);
             // enter language
             eleUtil.doSendKeys(languagefield, newLanguage);
             // enter language level
@@ -106,7 +106,7 @@ namespace MarsApplicationOnboarding.Pages
         {
             Wait.WaitToBeVisible(driver, notificationtext, Wait.LONG_DEFAULT_WAIT);
             //get text of notification popped up
-            return driver.FindElement(notificationtext).Text;
+            return eleUtil.getText(notificationtext);
         }
 
     }

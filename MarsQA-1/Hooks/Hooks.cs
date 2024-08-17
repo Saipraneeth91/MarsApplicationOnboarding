@@ -29,7 +29,7 @@ namespace MarsApplicationOnboarding.Hooks
         {
             if (isFirst)
             {
-                var login = new LoginMars(driver);
+                var login = new Login(driver);
                 var skills = new Skills(driver);
                 login.LoginActions();
                 skills.ClearSkills();
@@ -42,7 +42,7 @@ namespace MarsApplicationOnboarding.Hooks
         {
             if (isFirst)
             {
-                var login = new LoginMars(driver);
+                var login = new Login(driver);
                 var lang = new Languages(driver);
                 login.LoginActions();
                 lang.ClearLanguages();

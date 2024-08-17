@@ -57,7 +57,8 @@ namespace MarsApplicationOnboarding.Pages
             // click on edit icon
             eleUtil.doClick(editicon);
             // clear skill
-            driver.FindElement(skillfield).Clear();
+            eleUtil.doClear(skillfield);
+            //driver.FindElement(skillfield).Clear();
             // enter skill
             eleUtil.doSendKeys(skillfield, newSkill);
             // enter skill level
@@ -89,13 +90,13 @@ namespace MarsApplicationOnboarding.Pages
         {
             Wait.WaitToBeVisible(driver, skillname, Wait.SHORT_DEFAULT_WAIT);
             // get text of skill created
-            return driver.FindElement(skillname).Text;
+            return eleUtil.getText(skillname);
         }
         public string NotificationInfo()
         {
             Wait.WaitToBeVisible(driver, notificationtext, Wait.SHORT_DEFAULT_WAIT);
             //get text of notification popped up
-            return driver.FindElement(notificationtext).Text;
+            return eleUtil.getText(notificationtext);
         }
         public void ClearSkills()
         {

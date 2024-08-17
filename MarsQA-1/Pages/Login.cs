@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace MarsApplicationOnboarding.Pages
 {
-    public class LoginMars
+    public class Login
     {
         private readonly IWebDriver driver;
         private readonly ElementUtil eleUtil;
-        public LoginMars(IWebDriver driver)
+        public Login(IWebDriver driver)
         {
             this.driver = driver;
             eleUtil = new ElementUtil(driver);
@@ -22,6 +22,7 @@ namespace MarsApplicationOnboarding.Pages
         private readonly By emailaddress = By.XPath("//input[@placeholder='Email address']");
         private readonly By password = By.XPath("//input[@placeholder='Password']");
         private readonly By login = By.XPath("//button[contains(text(),'Login')]");
+        private readonly By welcometext = By.XPath("//div/div[1]/div[2]/div/span");
 
         public void LoginActions()
         {
@@ -36,6 +37,10 @@ namespace MarsApplicationOnboarding.Pages
             // click login
             eleUtil.doClick(login);
             Thread.Sleep(3000);
+        }
+        public string GetWelcomeText()
+        {
+            return eleUtil.getText(welcometext);
         }
 
     }

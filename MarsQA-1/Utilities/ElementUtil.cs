@@ -28,6 +28,14 @@ namespace MarsApplicationOnboarding.Utilities
         {
             getElement(locator).Click();
         }
+        public string getText(By locator)
+        {
+            return getElement(locator).Text;
+        }
+        public void doClear(By locator)
+        {
+            getElement(locator).Clear();
+        }
 
     }
 }

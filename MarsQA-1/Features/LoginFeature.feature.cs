@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace MarsApplicationOnboarding.Features
+namespace MarsApplicationOnboarding.MarsQA_1.Features
 {
     using TechTalk.SpecFlow;
     using System;
@@ -28,14 +28,14 @@ namespace MarsApplicationOnboarding.Features
         
         private static string[] featureTags = ((string[])(null));
         
-#line 1 "SigninFeature.feature"
+#line 1 "LoginFeature.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "MarsSiginFeature", "As a Mars Application user I want to be able to update my profile with languages " +
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "MarsQA-1/Features", "MarsSiginFeature", "As a Mars Application user I want to be able to update my profile with languages " +
                     "and skills I know.\r\nSo that the people seeking for skills and languages can look" +
                     " my profile and reach out to me.", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);

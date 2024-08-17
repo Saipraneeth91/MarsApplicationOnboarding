@@ -15,13 +15,13 @@ namespace MarsApplicationOnboarding.StepDefinitions
     public class LanguageStepDefinition
     {
         private readonly IWebDriver driver;
-        private readonly LoginMars loginMars;
+        private readonly Login loginMars;
         private readonly Languages languages;
 
         public LanguageStepDefinition(IWebDriver driver)
         {
             this.driver = driver;
-            loginMars = new LoginMars(driver);
+            loginMars = new Login(driver);
             languages = new Languages(driver);
 
         }
