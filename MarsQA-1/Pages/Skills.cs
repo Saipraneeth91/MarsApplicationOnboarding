@@ -48,33 +48,55 @@ namespace MarsApplicationOnboarding.Pages
             eleUtil.doClick(skilllevel);
             // click add button
             eleUtil.doClick(addskillbutton);
-            Thread.Sleep(2000);
+            Thread.Sleep(3000);          
+        }
+        public void AddSkill(string skill, string level, string newskill, string newlevel)
+        {
+            // click to navigate to skill section 
+            eleUtil.doClick(skillssection);
+            Wait.WaitToBeClickable(driver, addnewbutton, Wait.LONG_DEFAULT_WAIT);
+            // click addnew button
+            eleUtil.doClick(addnewbutton);
+            //add skill
+            eleUtil.doSendKeys(skillfield, skill);
+            //add skill level
+            eleUtil.doSendKeys(skilllevel, level);
+            //click skill level
+            eleUtil.doClick(skilllevel);
+            // click add button
+            eleUtil.doClick(addskillbutton);
+            Wait.WaitToBeClickable(driver, addnewbutton, Wait.LONG_DEFAULT_WAIT);
+            // click addnew button
+            eleUtil.doClick(addnewbutton);
+            //add skill
+            eleUtil.doSendKeys(skillfield, newskill);
+            //add skill level
+            eleUtil.doSendKeys(skilllevel, newlevel);
+            //click skill level
+            eleUtil.doClick(skilllevel);
+            // click add button
+            eleUtil.doClick(addskillbutton);
+        
+           
         }
         public void EditSkill(string newSkill, string newSkilllevel)
         {
+            Wait.WaitToBeClickable(driver, skillssection, Wait.LONG_DEFAULT_WAIT);
             //click to navigate to skill section 
             eleUtil.doClick(skillssection);
             // click on edit icon
             eleUtil.doClick(editicon);
             // clear skill
             eleUtil.doClear(skillfield);
-            //driver.FindElement(skillfield).Clear();
             // enter skill
+            eleUtil.doClick(skilllevel);
             eleUtil.doSendKeys(skillfield, newSkill);
             // enter skill level
+            eleUtil.doClick(skilllevel);
             eleUtil.doSendKeys(skilllevel, newSkilllevel);
             //click on update
             eleUtil.doClick(updatebutton);
-        }
-        public void EditSkillWithoutChange()
-        {
-            //click to navigate to skill section 
-            eleUtil.doClick(skillssection);
-            Wait.WaitToBeVisible(driver, editlastrecord, Wait.LONG_DEFAULT_WAIT);
-            //click on editicon of last record
-            eleUtil.doClick(editlastrecord);
-            //click update button
-            eleUtil.doClick(updatebutton);
+            Thread.Sleep(2000);
         }
 
         public void DeleteSkill(string Skillname)
@@ -83,6 +105,7 @@ namespace MarsApplicationOnboarding.Pages
             eleUtil.doClick(skillssection);
             // delete skill by skill name passed
             By deletebyskill = By.XPath("//td[text()='" + Skillname + "']/following-sibling::td/span[@class='button'][2]");
+            Wait.WaitToBeClickable(driver,deletebyskill, Wait.MEDIUM_DEFAULT_WAIT);
             eleUtil.doClick(deletebyskill);
             //Thread.Sleep(1000);
         }
@@ -94,12 +117,14 @@ namespace MarsApplicationOnboarding.Pages
         }
         public string NotificationInfo()
         {
-            Wait.WaitToBeVisible(driver, notificationtext, Wait.SHORT_DEFAULT_WAIT);
+            Wait.WaitToBeVisible(driver, notificationtext, Wait.LONG_DEFAULT_WAIT);
             //get text of notification popped up
             return eleUtil.getText(notificationtext);
         }
         public void ClearSkills()
         {
+            Wait.WaitToBeClickable(driver, skillssection, Wait.LONG_DEFAULT_WAIT);
+            eleUtil.doClick(skillssection);
             int totalrows = rows.Count;
             Console.WriteLine(totalrows);
             eleUtil.doClick(skillssection);

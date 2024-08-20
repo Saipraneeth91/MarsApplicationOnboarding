@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,8 +32,8 @@ namespace MarsApplicationOnboarding.Pages
         private readonly By editicon = By.XPath("//tbody[(1)]/tr[1]/td[3]/span[1]/i[1]");
         private readonly By updatebutton = By.XPath("//input[@value='Update']");
         private readonly By lastrecordedit = By.XPath("//tbody[last()]/tr[1]/td[3]/span[1]/i[1]");
-        private readonly By logoutbutton = By.XPath("//button[text()='Sign Out']");
         private readonly By deletelanguageicon = By.XPath("//i[@class='remove icon']");
+      
         public ReadOnlyCollection<IWebElement> rows => driver.FindElements(By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table//tbody"));
         private readonly By notificationtext = By.XPath("//div[@class='ns-box-inner']");
 
@@ -51,19 +52,45 @@ namespace MarsApplicationOnboarding.Pages
             eleUtil.doClick(addlangbutton);
         }
 
-        public void EditLanguage(string newLanguage, string newLanguagelevel)
+        public void AddLanguage(string language, string level,string newlanguage,string newlanguagelevel)
         {
-            //click edit icon
+            Wait.WaitToBeClickable(driver, addnewbutton, Wait.LONG_DEFAULT_WAIT);
+            // click on add new button
+            eleUtil.doClick(addnewbutton);
+            // Enter Language
+            eleUtil.doSendKeys(languagefield, language);
+            // Enter Language level
+            eleUtil.doSendKeys(languagelevel, level);
+            // Click language level
+            eleUtil.doClick(languagelevel);
+            // Click add button
+            eleUtil.doClick(addlangbutton);
+            Wait.WaitToBeClickable(driver, addnewbutton, Wait.LONG_DEFAULT_WAIT);
+            // click on add new button
+            eleUtil.doClick(addnewbutton);
+            // Enter Language
+            eleUtil.doSendKeys(languagefield, newlanguage);
+            // Enter Language level
+            eleUtil.doSendKeys(languagelevel, newlanguagelevel);
+            // Click language level
+            eleUtil.doClick(languagelevel);
+            // Click add button
+            eleUtil.doClick(addlangbutton);
+            
+        }
+        public void EditLanguage(string newlanguage, string newlanguagelevel)
+
+        {
+           Wait.WaitToBeClickable(driver, editicon, Wait.LONG_DEFAULT_WAIT);
             eleUtil.doClick(editicon);
-            // clear language field
-            //driver.FindElement(languagefield).Clear();
+            eleUtil.doClick(languagefield);
             eleUtil.doClear(languagefield);
-            // enter language
-            eleUtil.doSendKeys(languagefield, newLanguage);
-            // enter language level
-            eleUtil.doSendKeys(languagelevel, newLanguagelevel);
-            // click on update button
+            eleUtil.doSendKeys(languagefield, newlanguage);
+            eleUtil.doClick(languagelevel);
+            eleUtil.doSendKeys(languagelevel, newlanguagelevel);   
             eleUtil.doClick(updatebutton);
+            Thread.Sleep(2000);
+            
         }
         public void EditLangWithoutChange()
         {
@@ -80,6 +107,7 @@ namespace MarsApplicationOnboarding.Pages
             // click on delete icon of language passed
             Wait.WaitToBeClickable(driver, deleteLanguage, Wait.MEDIUM_DEFAULT_WAIT);
             eleUtil.doClick(deleteLanguage);
+            Thread.Sleep(2000);
         }
         public void ClearLanguages()
         {
@@ -91,9 +119,9 @@ namespace MarsApplicationOnboarding.Pages
                 Wait.WaitToBeVisible(driver, deletelanguageicon, Wait.MEDIUM_DEFAULT_WAIT);
                 // click on delete icon
                 eleUtil.doClick(deletelanguageicon);
+                Thread.Sleep(2000);
             }
-            //click on logout button
-            eleUtil.doClick(logoutbutton);
+           
         }
 
         public string GetLanguageRecord()

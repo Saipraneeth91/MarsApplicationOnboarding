@@ -2,6 +2,7 @@ using MarsApplicationOnboarding.Pages;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using System;
+using System.Reflection.Emit;
 using TechTalk.SpecFlow;
 
 namespace MarsApplicationOnboarding.StepDefinitions
@@ -12,114 +13,165 @@ namespace MarsApplicationOnboarding.StepDefinitions
         private readonly IWebDriver driver;
         private readonly Login loginMars;
         private readonly Skills skills;
-        public SkillsStepDefinitions(IWebDriver driver)
+        private readonly ScenarioContext _scenarioContext;
+        public SkillsStepDefinitions(IWebDriver driver, ScenarioContext scenarioContext)
         {
             this.driver = driver;
             loginMars = new Login(driver);
             skills = new Skills(driver);
+            _scenarioContext = scenarioContext;
         }
-        [Given(@"User logs into the application and navigates to Skills Section")]
-        public void GivenUserLogsIntoTheApplicationAndNavigatesToSkillsSection()
+        [Given(@"User Login to the Application and navigates to Skill section")]
+        public void GivenUserLoginToTheApplicationAndNavigatesToSkillSection()
         {
             loginMars.LoginActions();
         }
 
-        [When(@"User adds '([^']*)' '([^']*)'")]
-        public void WhenUserAdds(string Skill, string Skilllevel)
+        [When(@"User tries to add '([^']*)' and '([^']*)'")]
+        public void WhenUserTriesToAddAnd(string skill, string level)
         {
-
-            skills.AddSkill(Skill, Skilllevel);
+            // Store the language in ScenarioContext
+            _scenarioContext["language"] = skill;
+            _scenarioContext["languagelevel"] = level;
+             skills.AddSkill(skill, level);
         }
 
-        [Then(@"Profile is updated with '([^']*)' and '([^']*)'")]
-        public void ThenProfileIsUpdatedWithAnd(string Skill, string Skilllevel)
+        [When(@"User tries to add new  '([^']*)' and '([^']*)' for already existing '([^']*)' and '([^']*)'")]
+        public void WhenUserTriesToAddNewAndForAlreadyExistingAnd(string skill, string level, string newskill, string newlevel)
         {
-            string Actualskill = skills.GetSkillName();
-            Assert.That(Actualskill, Is.EqualTo(Skill));
+            _scenarioContext["skill"] = skill;
+            _scenarioContext["level"] = level;
+            skills.AddSkill(skill, level, newskill, newlevel);
         }
 
-        [Given(@"User is logged in and navigates to profile skill section")]
-        public void GivenUserIsLoggedInAndNavigatesToProfileSkillSection()
-        {
-            loginMars.LoginActions();
-        }
-
-        [When(@"User updates the record with '([^']*)' and '([^']*)'")]
-        public void WhenUserUpdatesTheRecordWithAnd(string Skill, string Skilllevel)
-        {
-            skills.EditSkill(Skill, Skilllevel);
-        }
-        [Then(@"profile gets updated with updated '([^']*)' and '([^']*)'")]
-        public void ThenProfileGetsUpdatedWithUpdatedAnd(string newSkill, string newSkilllevel)
-        {
-            string poppeduptext = skills.NotificationInfo();
-            string Expectedtext = newSkill + " has been updated to your skills";
-            Assert.That(poppeduptext, Is.EqualTo(Expectedtext));
-
-        }
-
-        [Given(@"User is logged in and navigates to Skill delete section")]
-        public void GivenUserIsLoggedInAndNavigatesToSkillDeleteSection()
-        {
-            loginMars.LoginActions();
-        }
-
-        [When(@"User deletes '([^']*)' from skills")]
-        public void WhenUserDeletesskillFromSkills(string skill)
-        {
-            skills.DeleteSkill(skill);
-        }
-
-        [Then(@"'([^']*)' Should be deleted from list")]
-        public void ThenShouldBeDeletedFromList(string skill)
-        {
-            string poppeduptext = skills.NotificationInfo();
-            string Expectedtext = skill + " has been deleted";
-            Assert.That(poppeduptext, Is.EqualTo(Expectedtext));
-
-        }
-
-        [When(@"User tries to add new skill record with invalid data '([^']*)' and '([^']*)'")]
-        public void WhenUserTriesToAddNewSkillRecordWithInvalidDataAnd(string Skill, string Skilllevel)
-        {
-            skills.AddSkill(Skill, Skilllevel);
-        }
-        [Then(@"Skill record should not be added")]
-        public void ThenSkillRecordShouldNotBeAdded()
-        {
-            string poppeduptext = skills.NotificationInfo();
-            string Expectedtext = "Please enter skill and experience level";
-            Assert.That(poppeduptext, Is.EqualTo(Expectedtext));
-        }
-
-        [When(@"User tries to add new skill record with already existing data '([^']*)' and '([^']*)'")]
-        public void WhenUserTriesToAddNewSkillRecordWithAlreadyExistingDataAnd(string Skill, string Skilllevel)
-        {
-            skills.AddSkill(Skill, Skilllevel);
-        }
-
-        [Then(@"User should not be able to add Skill record")]
-        public void ThenUserShouldNotBeAbleToAddSkillRecord()
+        [Then(@"User should get an error This Skill is already exist in your Skill list.")]
+        public void ThenUserShouldGetAnErrorThisSkillIsAlreadyExistInYourSkillList_()
         {
             string poppeduptext = skills.NotificationInfo();
             string Expectedtext = "This skill is already exist in your skill list.";
             Assert.That(poppeduptext, Is.EqualTo(Expectedtext));
         }
 
-        [When(@"User tries to update existing skill record without editing Skill or Skilllevel")]
-        public void WhenUserTriesToUpdateExistingSkillRecordWithoutEditingSkillOrSkilllevel()
+        [When(@"User tries to add a new record with invalid '([^']*)' and valid '([^']*)'")]
+        public void WhenUserTriesToAddANewRecordWithInvalidAndValid(string skill, string level)
         {
-            skills.EditSkillWithoutChange();
+            skills.AddSkill(skill, level);
         }
 
-        [Then(@"User Should get an error record is not modified")]
-        public void ThenUserShouldGetAnErrorRecordIsNotModified()
+        [Then(@"User should get an error Please enter Skill and level")]
+        public void ThenUserShouldGetAnErrorPleaseEnterSkillAndLevel()
+        {
+            string poppeduptext = skills.NotificationInfo();
+            string Expectedtext = "Please enter skill and experience level";
+            Assert.That(poppeduptext, Is.EqualTo(Expectedtext));
+        }
+
+        [When(@"User tries to add a new record with valid data '([^']*)' and invalid '([^']*)'")]
+        public void WhenUserTriesToAddANewRecordWithValidDataAndInvalid(string skill, string level)
+        {
+            skills.AddSkill(skill, level);
+        }
+
+        [When(@"User tries to add a new record with invalid '([^']*)' and invalid '([^']*)'")]
+        public void WhenUserTriesToAddANewRecordWithInvalidAndInvalid(string skill, string level)
+        {
+            skills.AddSkill(skill, level);
+        }
+
+        [When(@"User tries to add a new record with extreme long'([^']*)' and valid '([^']*)'")]
+        public void WhenUserTriesToAddANewRecordWithExtremeLongAndValid(string skill, string level)
+        {
+            skills.AddSkill(skill, level);
+        }
+
+        [Then(@"'([^']*)' record should not be added to profile")]
+        public void ThenRecordShouldNotBeAddedToProfile(string skill)
+        {
+            string poppeduptext = skills.NotificationInfo();
+            string Expectedtext = "TestcasepreparationtestdatamanagementcoordinationForeignExchangestSITe2eUATcommunicationtestautomationSQLISTQBrequirementsanalysistestplanningSystemtestingintegrationtestingdefecttrackingtestmetricsKYCAMLScrumJIRAbbackendtestingAPItestingSeleniumSpecFlowBDDCapitalMarketsBFSIBanking has been added to your skills";
+            Assert.That(poppeduptext, Is.EqualTo(Expectedtext));
+        }
+
+        [When(@"User edits the record of '([^']*)' and '([^']*)' to '([^']*)' and '([^']*)'")]
+        public void WhenUserEditsTheRecordOfAndToAnd(string skill, string level, string newskill, string newlevel)
+        {
+            _scenarioContext["skill"] = newskill;
+            _scenarioContext["level"] = newlevel;
+            skills.AddSkill(skill, level);
+            skills.EditSkill(newskill, newlevel);
+        }
+
+        [Then(@"User Should be able to update profile with new updated '([^']*)' and '([^']*)' values")]
+        public void ThenUserShouldBeAbleToUpdateProfileWithNewUpdatedAndValues(string newskill, string expertnewskilllevel)
+        {
+            string Actualskill = skills.GetSkillName();
+            Assert.That(Actualskill, Is.EqualTo(newskill));
+        }
+
+        [Given(@"User is logged in and navigates to Skill section")]
+        public void GivenUserIsLoggedInAndNavigatesToSkillSection()
+        {
+            loginMars.LoginActions();
+        }
+
+        [When(@"User tries to update an existing record without editing '([^']*)' or '([^']*)' to '([^']*)' and '([^']*)'")]
+        public void WhenUserTriesToUpdateAnExistingRecordWithoutEditingOrToAnd(string skill, string level, string newskill, string newlevel)
+        {
+            skills.AddSkill(skill, level);
+            skills.EditSkill(newskill, newlevel);
+        }
+
+        [Then(@"User should get an error This Skill is already added to your Skill list.")]
+        public void ThenUserShouldGetAnErrorThisSkillIsAlreadyAddedToYourSkillList_()
         {
             string poppeduptext = skills.NotificationInfo();
             string Expectedtext = "This skill is already added to your skill list.";
             Assert.That(poppeduptext, Is.EqualTo(Expectedtext));
         }
 
+        [When(@"User tries to update an existing record '([^']*)' '([^']*)' with blank '([^']*)' '([^']*)'")]
+        public void WhenUserTriesToUpdateAnExistingRecordWithBlank(string skill, string level, string newskill, string newlevel)
+        {
+            skills.AddSkill(skill,level);
+            skills.EditSkill(newskill, newlevel);
+        }
 
+        [When(@"User tries to update an existing record '([^']*)' '([^']*)' with  '([^']*)' and blank '([^']*)'")]
+        public void WhenUserTriesToUpdateAnExistingRecordWithAndBlank(string skill, string level, string newskill, string newlevel)
+        {
+            skills.AddSkill(skill, level);
+            skills.EditSkill(newskill, newlevel);
+        }
+
+        [When(@"User tries to update an existing record of '([^']*)' '([^']*)' with new record with extreme long binary input '([^']*)' and '([^']*)'")]
+        public void WhenUserTriesToUpdateAnExistingRecordOfWithNewRecordWithExtremeLongBinaryInputAnd(string skill, string level, string newskill, string newlevel)
+        {
+            skills.AddSkill(skill, level);
+            skills.EditSkill(newskill, newlevel);
+        }
+
+        [Then(@"Skill record should not be edited with '([^']*)'")]
+        public void ThenSkillRecordShouldNotBeEditedWith(string newskill)
+        {
+            string poppeduptext = skills.NotificationInfo();
+            string Expectedtext = newskill + " has been updated to your skills";
+            Assert.That(poppeduptext, Is.EqualTo(Expectedtext));
+        }
+
+        [When(@"User tries to delete '([^']*)' '([^']*)' from profile")]
+        public void WhenUserTriesToDeleteFromProfile(string skill, string level)
+        {
+            skills.AddSkill(skill,level);
+            skills.DeleteSkill(skill);
+        }
+
+
+        [Then(@"'([^']*)' Should be deleted from profile")]
+        public void ThenShouldBeDeletedFromProfile(string skill)
+        {
+            string poppeduptext = skills.NotificationInfo();
+            string Expectedtext = skill + " has been deleted";
+            Assert.That(poppeduptext, Is.EqualTo(Expectedtext));
+        }
     }
 }
