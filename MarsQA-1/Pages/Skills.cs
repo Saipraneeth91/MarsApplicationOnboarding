@@ -136,6 +136,8 @@ namespace MarsApplicationOnboarding.Pages
                 eleUtil.doClick(deletelastskill);
             }
             eleUtil.doClick(logout);
+
+           
         }
 
     }

@@ -1,75 +1,122 @@
 ﻿using BoDi;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
-
+using OpenQA.Selenium.Chrome;
 using TechTalk.SpecFlow;
 using MarsApplicationOnboarding.Pages;
-using System;
 
 namespace MarsApplicationOnboarding.Hooks
 {
     [Binding]
     public sealed class Hooks
     {
+        private static IWebDriver driver;
         private readonly IObjectContainer _container;
         private readonly ScenarioContext _scenarioContext;
-        private IWebDriver driver;
+
         public Hooks(IObjectContainer container, ScenarioContext scenarioContext)
         {
             _container = container;
             _scenarioContext = scenarioContext;
         }
-        [BeforeScenario]
-        public void FirstBeforeScenario()
+
+        [BeforeTestRun]
+        public static void BeforeTestRun()
         {
+            // Initialize the WebDriver instance
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
-            _container.RegisterInstanceAs(driver);
-             ClearLang();
-             ClearSkills(); //Clears all the languages &Skills before scenario execution
+
+            // Clear languages and skills before test execution
+            ClearLang();
+            ClearSkills();
         }
-        public void ClearLang()
-        { 
-            var login = new Login(driver);
-            var lang = new Languages(driver);
-            login.LoginActions();
-            lang.ClearLanguages();
-        }
-        public void ClearSkills()
+
+        [BeforeScenario]
+        public void BeforeScenario()
         {
-            var skills = new Skills(driver);
-            skills.ClearSkills(); 
+            // Register the WebDriver instance with the container
+            // each scenario gets a fresh WebDriver instance
+            if (!_container.IsRegistered<IWebDriver>())
+            {
+                _container.RegisterInstanceAs(driver);
+            }
+        }
+
+        public static void ClearLang()
+        {
+            if (driver != null)
+            {
+                var login = new Login(driver);
+                var lang = new Languages(driver);
+                login.LoginActions();
+                lang.ClearLanguages();
+            }
+        }
+
+        public static void ClearSkills()
+        {
+            if (driver != null)
+            {
+                var skills = new Skills(driver);
+                skills.ClearSkills();
+            }
         }
 
         [AfterScenario(Order = 1)]
         public void ClearTestSpecificLanguagesAfterScenario()
         {
-            var lang = new Languages(driver);
-            var skills = new Skills(driver);
-
-            // Retrieve the language value from ScenarioContext
-            if (_scenarioContext.TryGetValue("language", out string language))
+            if (driver != null)
             {
-                lang.DeleteLanguage(language);      
-              // Deletes only the language added by this scenario after execution
-            }
-            if (_scenarioContext.TryGetValue("skill", out string skill))
-            {
-                skills.DeleteSkill(skill);
-                // Deletes only the Skills added by this scenario after execution
-            }
+                var lang = new Languages(driver);
+                var skills = new Skills(driver);
 
+                // Retrieve the language value from ScenarioContext
+                if (_scenarioContext.TryGetValue("language", out string language))
+                {
+                    lang.DeleteLanguage(language);
+                }
+                if (_scenarioContext.TryGetValue("skill", out string skill))
+                {
+                    skills.DeleteSkill(skill);
+                }
+            }
         }
 
         [AfterScenario(Order = 2)]
-        public void AfterScenario()
+        public void LogoutAndQuitAfterScenario()
         {
-            var driver = _container.Resolve<IWebDriver>();
             if (driver != null)
             {
+                var login = new Login(driver);
+                
+
+                // Quit the WebDriver instance after each scenario
                 driver.Quit();
+
+                // Reinitialize WebDriver for the next scenario
+                driver = new ChromeDriver();
+                driver.Manage().Window.Maximize();
+
+                // Register the new WebDriver instance with the container
+                // Avoid re-registering if it's already registered
+                if (!_container.IsRegistered<IWebDriver>())
+                {
+                    _container.RegisterInstanceAs(driver);
+                }
             }
         }
 
+        [AfterTestRun]
+        public static void AfterTestRun()
+        {
+          
+            if (driver != null)
+            
+                {
+                    driver.Quit();
+                    driver = null; 
+                }
+            }
+        }
     }
-}
+

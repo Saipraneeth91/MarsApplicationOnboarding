@@ -33,5 +33,23 @@ namespace MarsApplicationOnboarding.StepDefinitions
             string Expectedtext = "Hi Sai";
             Assert.That(Actualtext, Is.EqualTo(Expectedtext));
         }
+        [Given(@"User has invalid email and password")]
+        public void GivenUserHasInvalidEmailAndPassword()
+        {
+            throw new PendingStepException();
+        }
+
+        [When(@"User Enter same\.")]
+        public void WhenUserEnterSame_()
+        {
+            throw new PendingStepException();
+        }
+
+        [Then(@"User Must not be loggedin to the Application \.")]
+        public void ThenUserMustNotBeLoggedinToTheApplication_()
+        {
+            throw new PendingStepException();
+        }
+
     }
 }

@@ -1,5 +1,7 @@
 ﻿using MarsApplicationOnboarding.Utilities;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +20,7 @@ namespace MarsApplicationOnboarding.Pages
             eleUtil = new ElementUtil(driver);
         }
         //By Locators
-        private readonly By signin = By.XPath("//a[contains(text(),'Sign In')]");
+        private readonly By signin = By.XPath("//a[normalize-space()='Sign In']");
         private readonly By emailaddress = By.XPath("//input[@placeholder='Email address']");
         private readonly By password = By.XPath("//input[@placeholder='Password']");
         private readonly By login = By.XPath("//button[contains(text(),'Login')]");
@@ -26,17 +28,32 @@ namespace MarsApplicationOnboarding.Pages
 
         public void LoginActions()
         {
-            //navigate to Mars Application
-            driver.Navigate().GoToUrl("http://localhost:5000/");
-            //click sign in
-            eleUtil.doClick(signin);
-            //enter email address
-            eleUtil.doSendKeys(emailaddress, "saipraneethg.91@gmail.com");
-            // enter password
-            eleUtil.doSendKeys(password, "Praneeth@1");
-            // click login
-            eleUtil.doClick(login);
-            Thread.Sleep(3000);
+            try
+            {
+                
+                //navigate to Mars Application
+                driver.Navigate().GoToUrl("http://localhost:5000/");
+                //click sign in
+                Thread.Sleep(2000);
+                eleUtil.doClick(signin);
+                //enter email address
+                eleUtil.doSendKeys(emailaddress, "saipraneethg.91@gmail.com");
+                // enter password
+                eleUtil.doSendKeys(password, "Praneeth@1");
+                // click login
+                eleUtil.doClick(login);
+                Thread.Sleep(2000);
+            }
+            catch (WebDriverException ex)
+            {
+                Console.WriteLine($"WebDriverException occurred: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"General Exception occurred: {ex.Message}");
+                throw;
+            }
         }
         public string GetWelcomeText()
         {
